@@ -39,7 +39,11 @@ def user_has_permission_to_create_article(user_id):
         # Закрытие курсора и соединения с базой данных
         dbClose(cur, conn)
 
-# Маршрут для вывода всех пользователей в консоль
+@rgz.route("/")
+def slesh():
+    return redirect('/rgz', code=302)
+
+
 @rgz.route("/rgz")
 def main():
     # Проверка аутентификации пользователя
