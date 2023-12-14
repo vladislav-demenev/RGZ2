@@ -6,7 +6,7 @@ from datetime import datetime
 rgz = Blueprint("rgz", __name__)
 
 
-ADMIN_USER_ID = 4
+ADMIN_USER_ID = 1
 
 
 # Функции подключения и закрытия базы данных
@@ -312,37 +312,3 @@ def delete_user(user_id):
         dbClose(cur, conn)
 
     return redirect('/rgz/users')
-
-
-@rgz.route("/rgz/create_admin", methods=["GET", "POST"])
-def register_admin():
-    if request.method == "GET":
-        # Отображение формы регистрации администратора при GET-запросе
-        return render_template("create_admin.html")
-    elif request.method == "POST":
-        # Обработка формы регистрации администратора при POST-запросе
-        ADMIN_USER_ID = request.form.get("admin_username")
-        admin_password = request.form.get("admin_password")
-
-        # Хеширование пароля
-        hash_password = generate_password_hash(admin_password)
-
-        conn = dbConnect()
-        cur = conn.cursor()
-
-        try:
-            # Проверка существования администратора по имени пользователя
-            cur.execute("SELECT id FROM users WHERE username = %s;", (ADMIN_USER_ID,))
-            result = cur.fetchone()
-
-            if result:
-                return render_template("create_admin.html", error="Администратор с таким именем уже существует.")
-
-            # Создание записи администратора
-            cur.execute("INSERT INTO users (username, password) VALUES (%s, %s);", (ADMIN_USER_ID, hash_password))
-            conn.commit()
-
-            return redirect('/rgz/logins')  # Перенаправление на страницу входа
-
-        finally:
-            dbClose(cur, conn)
