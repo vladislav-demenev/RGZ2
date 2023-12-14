@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ{% endblock %}
+
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='rgz.css')}}">
+<div>
+    <div>
+      <form method="post">
+        <h1>Регистрация пользователя!</h1>
+
+        {% for error in errors %}
+                {{ error }}
+              {% endfor %}
+
+        <div>
+          <input class="pole" type="text" name="username" placeholder="Логин">
+        </div>
+
+        <div>
+          <input class="pole" type="password" name="password" placeholder="Пароль">
+        </div>
+
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+    <a href="/rgz">
+            <button >Вернуться назад</button>
+        </a>
+  </div>
+</div>
+{% endblock %}

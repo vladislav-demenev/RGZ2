@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ{% endblock %}
+
+{% block main %}
+<body>
+    <h1>Редактирование пользователя</h1>
+    <form method="post">
+        <label for="new_username">Новое имя пользователя:</label>
+        <input type="text" id="new_username" name="new_username" value="{{ user[1] }}" required>
+        <button type="submit">Сохранить изменения</button>
+    </form>
+    <a href="/rgz/users">
+        <button >Вернуться назад</button>
+    </a>
+</body>
+</html>
+{% endblock %}

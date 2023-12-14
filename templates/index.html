@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ{% endblock %}
+
+{% block main %}
+<body>
+    <div>
+        <h1>База знаний</h1>
+        <ol>
+            <li>
+                <a href="/rgz/massege">Входящие</a>
+            </li>
+            <li>
+                <a href="/rgz/users">Список пользователей</a>
+            </li>
+            <li>
+                <a href="/rgz/logins">Логин</a>
+            </li>
+            <li>
+                <a href="/rgz/register">Регистрация</a>
+            </li>
+        </ol>
+        {% if user_is_authenticated %}
+            <p>Добро пожаловать, {{ current_user.username }}!</p>
+            <a href="{{ url_for('rgz.logout') }}">Выход</a>
+        {% else %}
+            <p>Добро пожаловать, Гость!</p>
+        {% endif %}
+    </div>
+    <a href="/rgz/create_admin"><button>Регистрация администратора</button></a>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ{% endblock %}
+
+{% block main %}
+<body>
+    <h1>Входящие сообщения</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Отправитель</th>
+                <th>Сообщение</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message[1] }}</td>
+                    <td>{{ message[2] }}</td>
+                    <td>
+                        <a href="{{ url_for('rgz.delete_message', message_id=message[0]) }}"><button >Удалить</button></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/rgz">
+        <button >Вернуться назад</button>
+    </a>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ{% endblock %}
+
+{% block main %}
+<div>
+    <div>
+    <h2>Пожалуйста, авторизуйтесь</h2>
+    <div>
+        {% for error in errors %}
+            {{ error }}
+        {% endfor %}
+    </div>
+    <form method="post">
+        <div>
+            <label for="username">Пользователь</label>
+            <input class="pole" type="text" id="username" name="username" value="{{ username or '' }}">
+        </div>
+        <div>
+            <label for="password">Пароль</label>
+            <input class="pole" type="password" id="password" name="password" value="{{ password or '' }}">
+        </div>
+        <div>
+            <button type="reset">Отмена</button>
+            <button type="submit">Войти</button>
+        </div>
+        
+    </form><a href="/rgz">
+            <button >Вернуться назад</button>
+        </a>
+    </div>
+</div>
+{% endblock %}
