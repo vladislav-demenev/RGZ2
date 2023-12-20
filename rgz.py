@@ -154,9 +154,11 @@ def logout():
     return redirect("/rgz/logins")
 
 
+# Маршрут для отображения списка пользователей (только для админа или авторизованного пользователя)
 @rgz.route("/rgz/users")
 def show_users():
     if 'user_id' not in session:
+        # Перенаправление на страницу авторизации, если пользователь не авторизован
         return redirect('/rgz/logins')
 
     user_id = session['user_id']
@@ -167,6 +169,7 @@ def show_users():
         cur = conn.cursor()
 
         try:
+            # Получение списка пользователей (исключая текущего пользователя)
             cur.execute("SELECT * FROM users WHERE id != %s;", (user_id,))
             result = cur.fetchall()
 
@@ -175,11 +178,14 @@ def show_users():
             dbClose(cur, conn)
 
     else:
+        # Перенаправление на домашнюю страницу, если у пользователя нет прав
         return redirect('/rgz')
 
+# Маршрут для редактирования пользователя (только для админа)
 @rgz.route("/rgz/users/edit/<int:user_id>", methods=["GET", "POST"])
 def edit_user(user_id):
     if 'user_id' not in session or session['user_id'] != ADMIN_USER_ID:
+        # Перенаправление на страницу авторизации, если пользователь не админ
         return redirect('/rgz/logins')
 
     conn = dbConnect()
@@ -200,10 +206,11 @@ def edit_user(user_id):
     finally:
         dbClose(cur, conn)
 
-
+# Маршрут для отправки сообщения (POST-запрос)
 @rgz.route("/rgz/send_message/<int:recipient_id>", methods=["POST"])
 def send_message(recipient_id):
     if 'user_id' not in session:
+        # Перенаправление на страницу авторизации, если пользователь не авторизован
         return redirect('/rgz/logins')
 
     current_user_id = session['user_id']
@@ -216,6 +223,7 @@ def send_message(recipient_id):
             message_text = request.form.get("user_comment")
 
             if message_text:
+                # Вставка нового сообщения в базу данных
                 cur.execute("INSERT INTO message (user_id, sender_id, recipient_id, message_text) VALUES (%s, %s, %s, %s);", (recipient_id, current_user_id, recipient_id, message_text))
                 conn.commit()
 
@@ -224,9 +232,11 @@ def send_message(recipient_id):
 
     return redirect('/rgz/users')
 
+# Маршрут для удаления сообщений (POST-запрос)
 @rgz.route("/rgz/delete_messages/<int:recipient_id>", methods=["POST"])
 def delete_messages(recipient_id):
     if 'user_id' not in session:
+        # Перенаправление на страницу авторизации, если пользователь не авторизован
         return redirect('/rgz/logins')
 
     current_user_id = session['user_id']
@@ -235,10 +245,10 @@ def delete_messages(recipient_id):
     cur = conn.cursor()
 
     try:
-        # Delete sent messages
+        # Удаление отправленных сообщений
         cur.execute("DELETE FROM message WHERE sender_id = %s AND recipient_id = %s;", (current_user_id, recipient_id))
 
-        # Delete received messages
+        # Удаление принятых сообщений
         cur.execute("DELETE FROM message WHERE sender_id = %s AND user_id = %s;", (recipient_id, current_user_id))
 
         conn.commit()
@@ -247,9 +257,11 @@ def delete_messages(recipient_id):
 
     return redirect('/rgz/users')
 
+# Маршрут для отображения сообщений пользователя
 @rgz.route("/rgz/massege")
 def massege():
     if 'user_id' not in session:
+        # Перенаправление на страницу авторизации, если пользователь не авторизован
         return redirect('/rgz/logins')
 
     user_id = session['user_id']
@@ -271,9 +283,11 @@ def massege():
     finally:
         dbClose(cur, conn)
 
+# Маршрут для удаления сообщения (GET-запрос)
 @rgz.route("/rgz/delete_message/<int:message_id>")
 def delete_message(message_id):
     if 'user_id' not in session:
+        # Перенаправление на страницу авторизации, если пользователь не авторизован
         return redirect('/rgz/logins')
 
     user_id = session['user_id']
@@ -296,9 +310,11 @@ def delete_message(message_id):
 
     return redirect('/rgz/massege')
 
+# Маршрут для удаления пользователя (только для админа)
 @rgz.route("/rgz/users/delete/<int:user_id>")
 def delete_user(user_id):
     if 'user_id' not in session or session['user_id'] != ADMIN_USER_ID:
+        # Перенаправление на страницу авторизации, если пользователь не админ
         return redirect('/rgz/logins')
 
     conn = dbConnect()
